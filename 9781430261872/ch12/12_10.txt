@@ -1,0 +1,41 @@
+BEGIN
+  DBMS_WORKLOAD_REPOSITORY.create_baseline (
+    start_snap_id => 2150,
+    end_snap_id   => 2155,
+    baseline_name => 'peak_baseline_jun14_13');
+END;
+/
+
+BEGIN
+  dbms_sqltune.create_sqlset(
+    sqlset_name => 'test1'
+   ,description => 'STS from AWR');
+END;
+/
+
+DECLARE
+  base_cur dbms_sqltune.sqlset_cursor;
+BEGIN
+  OPEN base_cur FOR
+    SELECT value(x)
+    FROM table(dbms_sqltune.select_workload_repository(
+      'peak_baseline_jun14_13', null, null,'elapsed_time',
+      null, null, null, 15)) x;
+  dbms_sqltune.load_sqlset(
+    sqlset_name => 'test1',
+    populate_cursor => base_cur);
+END;
+/
+
+SELECT sqlset_name, elapsed_time
+,cpu_time, buffer_gets, disk_reads, sql_text
+FROM dba_sqlset_statements
+WHERE sqlset_name = 'test1';
+
+DECLARE
+  test_plan1 PLS_INTEGER;
+BEGIN
+  test_plan1 := dbms_spm.load_plans_from_sqlset(
+                  sqlset_name=>'test1');
+END;
+/

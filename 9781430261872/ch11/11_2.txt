@@ -1,0 +1,41 @@
+SET LINESIZE 80 PAGESIZE 0 LONG 100000
+SELECT DBMS_AUTO_SQLTUNE.REPORT_AUTO_TUNING_TASK FROM DUAL;
+
+#!/bin/bash
+# Source oracle OS variables
+export ORACLE_SID=O12C
+export ORACLE_HOME='/ora01/app/oracle/product/12.1.0.3/db_1'
+#
+BOX=`uname -a | awk '{print$2}'`
+OUTFILE=$HOME/bin/log/sqladvice.txt
+#
+sqlplus -s <<EOF
+mv_maint/foo
+SPO $OUTFILE
+SET LINESIZE 80 PAGESIZE 0 LONG 100000
+SELECT DBMS_AUTO_SQLTUNE.REPORT_AUTO_TUNING_TASK FROM DUAL;
+EOF
+cat $OUTFILE | mailx -s "SQL Advice: $1 $BOX" dkuhn@gmail.com
+exit 0
+Here’s the corresponding cron entry that runs the report on a daily basis:
+#-----------------------------------------------------------------
+# SQL Advice report from SQL auto tuning
+16 11 * * * /orahome/oracle/bin/sqladvice.bsh 1>/orahome/oracle/bin/log/sqladvice.log 2>&1
+#-----------------------------------------------------------------
+
+VARIABLE tune_report CLOB;
+BEGIN
+  :tune_report := DBMS_AUTO_SQLTUNE.report_auto_tuning_task(
+    begin_exec   => NULL
+   ,end_exec     => NULL
+   ,type         => DBMS_AUTO_SQLTUNE.type_text
+   ,level        => DBMS_AUTO_SQLTUNE.level_typical
+   ,section      => DBMS_AUTO_SQLTUNE.section_all
+   ,object_id    => NULL
+   ,result_limit => NULL);
+END;
+/
+--
+SET LONG 1000000
+PRINT :tune_report
+

@@ -1,0 +1,24 @@
+alter table cust add constraint cust_pk primary key (cust_id)
+using index tablespace users;
+
+select constraint_name, constraint_type
+from user_constraints
+where table_name = 'CUST'
+
+select index_name, tablespace_name, index_type, uniqueness
+from user_indexes
+where table_name = 'CUST';
+
+create index cust_pk on cust(cust_id);
+alter table cust add constraint cust_pk primary key(cust_id);
+
+create table cust(cust_id number primary key);
+
+create table cust(cust_id number constraint cust_pk primary key
+using index tablespace users);
+
+create table cust(
+ cust_id number
+,constraint cust_pk primary key (cust_id) using index tablespace users);
+
+

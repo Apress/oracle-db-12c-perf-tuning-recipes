@@ -1,0 +1,17 @@
+BEGIN
+  DBMS_SQLTUNE.ALTER_SQL_PROFILE(
+    name => 'SYS_SQLPROF_013f199ac5990000',
+    attribute_name => 'STATUS',
+    value => 'DISABLED');
+END;
+/
+
+BEGIN
+  DBMS_SQLTUNE.ALTER_SQL_PROFILE(
+    name => 'SYS_SQLPROF_013f199ac5990000',
+    attribute_name => 'STATUS',
+    value => 'ENABLED');
+END;
+/
+
+

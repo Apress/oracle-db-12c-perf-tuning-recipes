@@ -1,0 +1,31 @@
+#!/bin/bash
+if [ $# -ne 1 ]; then
+echo "Usage: $0 SID"
+exit 1
+fi
+# source oracle OS variables
+. /etc/oraset $1
+#
+BOX=`uname -a | awk '{print$2}'`
+#
+sqlplus -s <<EOF
+mv_maint/foo
+spo $HOME/bin/log/seg.txt
+set lines 80
+set pages 100
+SELECT
+'Segment Advice --------------------------'|| chr(10) ||
+'TABLESPACE_NAME : ' || tablespace_name || chr(10) ||
+'SEGMENT_OWNER : ' || segment_owner || chr(10) ||
+'SEGMENT_NAME : ' || segment_name || chr(10) ||
+'ALLOCATED_SPACE : ' || allocated_space || chr(10) ||
+'RECLAIMABLE_SPACE: ' || reclaimable_space || chr(10) ||
+'RECOMMENDATIONS : ' || recommendations || chr(10) ||
+'SOLUTION 1 : ' || c1 || chr(10) ||
+'SOLUTION 2 : ' || c2 || chr(10) ||
+'SOLUTION 3 : ' || c3 Advice
+FROM
+TABLE(dbms_space.asa_recommendations('FALSE', 'FALSE', 'FALSE'));
+EOF
+cat $HOME/bin/log/seg.txt | mailx -s "Seg. rpt. on DB: $1 $BOX" dkuhn@oracle.com
+exit 0

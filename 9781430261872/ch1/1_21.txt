@@ -1,0 +1,8 @@
+create table regs
+(reg_id number
+,reg_name varchar2(2000)
+) row store compress advanced;
+
+select table_name, compression, compress_for
+from user_tables
+where table_name='REGS';

@@ -1,0 +1,12 @@
+create index inv_idx1 on inv(inv_id, inv_id2)
+nologging
+tablespace inv_mgmt_index;
+
+select index_name, logging from user_indexes;
+
+create index inv_idx1 on inv(inv_id)
+parallel 2
+tablespace inv_mgmt_data;
+
+select index_name, degree from user_indexes;
+

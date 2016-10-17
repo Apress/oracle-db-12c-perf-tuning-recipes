@@ -1,0 +1,11 @@
+SELECT first_name
+FROM cust
+WHERE UPPER(first_name) = 'DAVE';
+
+select  index_name, column_name
+from user_ind_columns
+where table_name = 'CUST';
+
+SET LONG 5000
+select index_name, column_expression from user_ind_expressions;
+

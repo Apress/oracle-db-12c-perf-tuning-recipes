@@ -1,0 +1,12 @@
+create table emp(
+emp_id number
+,first_name varchar2(30)
+,last_name varchar2(30));
+
+select count(*) from user_segments where segment_name='EMP';
+
+create table emp(
+emp_id number
+,first_name varchar2(30)
+,last_name varchar2(30))
+segment creation immediate;

@@ -1,0 +1,7 @@
+create tablespace tools
+datafile '/u01/dbfile/O12C/tools01.dbf' size 100m;
+
+
+select tablespace_name, extent_management, segment_space_management
+from dba_tablespaces
+where tablespace_name='TOOLS';

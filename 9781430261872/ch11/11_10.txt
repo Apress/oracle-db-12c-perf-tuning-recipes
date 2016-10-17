@@ -1,0 +1,23 @@
+SELECT sqlset_name, elapsed_time
+,cpu_time, buffer_gets, disk_reads, sql_text
+FROM dba_sqlset_statements
+WHERE sqlset_name = 'IO_STS';
+
+SELECT sql_id, substr(sql_text,1,20), disk_reads
+,cpu_time, elapsed_time
+,buffer_gets, parsing_schema_name
+FROM table(
+DBMS_SQLTUNE.SELECT_CURSOR_CACHE(
+ basic_filter => 'parsing_schema_name <> ''SYS'''
+,ranking_measure1 => 'cpu_time'
+,result_limit => 10
+));
+
+SELECT sql_id, substr(sql_text,1,20)
+,disk_reads, cpu_time, elapsed_time
+FROM table(DBMS_SQLTUNE.SELECT_CURSOR_CACHE('parsing_schema_name <> ''SYS''
+                                             AND elapsed_time > 1000000'))
+ORDER BY sql_id;
+
+SELECT *
+FROM table(DBMS_SQLTUNE.SELECT_CURSOR_CACHE('sql_id = ''byzwu34haqmh4'''));

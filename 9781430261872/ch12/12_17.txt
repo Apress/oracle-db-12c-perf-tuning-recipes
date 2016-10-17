@@ -1,0 +1,16 @@
+BEGIN
+  DBMS_SPM.SET_EVOLVE_TASK_PARAMETER('SYS_AUTO_SPM_EVOLVE_TASK',
+  'ACCEPT_PLANS', 'false');
+END;
+/
+
+select parameter_name, parameter_value
+from dba_advisor_parameters
+where task_name = 'SYS_AUTO_SPM_EVOLVE_TASK'
+and parameter_name = 'ACCEPT_PLANS';
+
+BEGIN
+  DBMS_SPM.SET_EVOLVE_TASK_PARAMETER('SYS_AUTO_SPM_EVOLVE_TASK',
+  'ACCEPT_PLANS', 'true');
+END;
+/

@@ -1,0 +1,7 @@
+select table_name, logging
+from user_tables
+where table_name = 'EMP';
+
+select name, log_mode, force_logging from v$database;
+select tablespace_name, logging from dba_tablespaces;
+select owner, table_name, logging from dba_tables where logging = 'NO';

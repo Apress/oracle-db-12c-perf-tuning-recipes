@@ -1,0 +1,20 @@
+select sql_id, child_number, sql_plan_baseline, sql_text
+from v$sql
+where sql_plan_baseline is not null
+and sql_text like 'select first_name%';
+
+
+set autotrace trace explain;
+select first_name from emp where emp_id = 3000;
+
+EXPLAIN PLAN
+SET STATEMENT_ID = 'myplan' FOR
+select first_name from emp where emp_id=3000;
+--
+set pagesize 100
+set linesize 132
+set long 1000000
+col xplan format a132
+--
+SELECT dbms_xplan.display_plan(statement_id => 'myplan') AS XPLAN
+FROM dual;

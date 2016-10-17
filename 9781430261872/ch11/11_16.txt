@@ -1,0 +1,53 @@
+DECLARE
+  tune_task VARCHAR2(30);
+  tune_sql  CLOB;
+BEGIN
+  tune_sql := 'select count(*) from emp';
+  tune_task := DBMS_SQLTUNE.CREATE_TUNING_TASK(
+    sql_text    => tune_sql
+   ,user_name   => 'MV_MAINT'
+   ,scope       => 'COMPREHENSIVE'
+   ,time_limit  => 60
+   ,task_name   => 'tune_test1'
+   ,description => 'Provide SQL text'
+);
+END;
+/
+
+SELECT sql_id, plan_hash_value , sql_text 
+FROM v$sql where sql_text like '%&mytext%'
+and sql_text not like '%FROM v$sql%';
+Once you have the SQL_ID, and PLAN_HASH_VALUE, you can provide those values as input to DBMS_SQLTUNE.CREATE_TUNING_TASK:
+DECLARE
+  tune_task VARCHAR2(30);
+  tune_sql  CLOB;
+BEGIN
+  tune_task := DBMS_SQLTUNE.CREATE_TUNING_TASK(
+    sql_id          => '1ybqt7wu5hwas'
+   ,plan_hash_value => '3956160932'
+   ,task_name       => 'tune_test2'
+   ,description     => 'Provide SQL ID'
+);
+END;
+/
+
+DECLARE
+  tune_task VARCHAR2(30);
+  tune_sql  CLOB;
+BEGIN
+  tune_task := DBMS_SQLTUNE.CREATE_TUNING_TASK(
+    sql_id      => '1tbu2jp7kv0pm'
+   ,begin_snap  => 21690
+   ,end_snap    => 21864
+   ,task_name   => 'tune_test3'
+);
+END;
+/
+
+select snap_id, sql_id, plan_hash_value
+from dba_hist_sqlstat
+order by snap_id;
+
+variable mytt varchar2(30);
+exec :mytt := DBMS_SQLTUNE.CREATE_TUNING_TASK(sqlset_name => 'PROD_WORKLOAD', -
+                                                    task_name => 'tune_test4');

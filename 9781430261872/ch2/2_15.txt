@@ -1,0 +1,13 @@
+alter index emp_idx1 monitoring usage;
+select index_name, table_name, monitoring, used from dba_object_usage;
+
+set pagesize 0 head off linesize 132
+spool enable_mon.sql
+select
+  'alter index ' || index_name || ' monitoring usage;'
+from user_indexes;
+spool off;
+
+alter index emp_idx1 nomonitoring usage;
+
+

@@ -1,0 +1,56 @@
+SELECT snap_id, instance_number, end_interval_time
+FROM dba_hist_snapshot
+ORDER BY snap_id;
+
+SELECT sql_id
+,substr(sql_text,1,20)
+,disk_reads, cpu_time, elapsed_time
+FROM table(DBMS_SQLTUNE.SELECT_WORKLOAD_REPOSITORY(1669,1671,
+            null, null, 'disk_reads',null, null, null, 10))
+ORDER BY disk_reads DESC;
+
+SELECT sql_id, substr(sql_text,1,20)
+,disk_reads, cpu_time, elapsed_time, parsing_schema_name
+FROM table(
+DBMS_SQLTUNE.SELECT_WORKLOAD_REPOSITORY(1669,1671,
+'parsing_schema_name <> ''SYS''',
+NULL, NULL,NULL,NULL, 1, NULL, 'ALL'));
+
+SELECT sql_id, substr(sql_text,1,20)
+,disk_reads, cpu_time, elapsed_time, buffer_gets, parsing_schema_name
+FROM table(
+DBMS_SQLTUNE.SELECT_WORKLOAD_REPOSITORY(
+ begin_snap => 1669
+,end_snap => 1671
+,basic_filter => 'parsing_schema_name <> ''SYS'''
+,ranking_measure1 => 'buffer_gets'
+,result_limit => 10
+));
+
+COL bsnap NEW_VALUE begin_snap
+COL esnap NEW_VALUE end_snap
+--
+SELECT MAX(snap_id) bsnap
+FROM dba_hist_snapshot
+WHERE begin_interval_time < sysdate-7;
+--
+SELECT MAX(snap_id) esnap
+FROM dba_hist_snapshot;
+--
+COL sql_text            FORMAT A40
+COL sql_id              FORMAT A15
+COL parsing_schema_name FORMAT A15
+COL cpu_seconds         FORMAT 999,999,999,999,999
+SET LONG 10000 LINES 132 PAGES 100 TRIMSPOOL ON
+--
+SELECT sql_id, sql_text
+,disk_reads, cpu_time cpu_seconds, elapsed_time, buffer_gets, parsing_schema_name
+FROM table(
+DBMS_SQLTUNE.SELECT_WORKLOAD_REPOSITORY(
+ begin_snap => &begin_snap
+,end_snap => &end_snap
+,basic_filter => 'parsing_schema_name <> ''SYS'''
+,ranking_measure1 => 'cpu_time'
+,result_limit => 10
+));
+

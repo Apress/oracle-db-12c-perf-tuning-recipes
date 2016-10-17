@@ -1,0 +1,33 @@
+alter table cust add constraint cust_ux1 unique (last_name, first_name)
+using index tablespace users;
+
+select constraint_name, constraint_type
+from user_constraints
+where table_name = 'CUST';
+
+select index_name, tablespace_name, index_type, uniqueness
+from user_indexes
+where table_name = 'CUST';
+
+create unique index cust_uidx1 on cust(last_name, first_name) tablespace users;
+alter table cust add constraint cust_uidx1 unique (last_name, first_name);
+
+create table cust(
+ cust_id number
+,last_name varchar2(30)
+,first_name varchar2(30)
+,constraint cust_ux1 unique(last_name, first_name)
+ using index tablespace users);
+
+insert into cust values (1, 'STARK', 'JIM');
+insert into cust values (1, 'STARK', 'JIM');
+
+select constraint_name
+from dba_constraints
+where constraint_name='CUST_UIDX1';
+no rows selected
+
+select index_name, uniqueness
+from dba_indexes where index_name='CUST_UIDX1';
+
+

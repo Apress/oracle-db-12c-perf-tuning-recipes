@@ -1,0 +1,8 @@
+create index emp_idx1 on emp(first_name) invisible;
+create index emp_idx1 on emp(first_name) invisible;
+alter index emp_idx1 visible;
+select index_name, status, visibility from user_indexes;
+
+
+
+

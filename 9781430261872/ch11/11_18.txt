@@ -1,0 +1,6 @@
+var task_name varchar2(30);
+exec DBMS_ADDM.ANALYZE_DB(:task_name, 1766, 1767);
+print :task_name
+
+SET LONG 1000000 PAGESIZE 0;
+SELECT DBMS_ADDM.GET_REPORT('TASK_3041') FROM DUAL;

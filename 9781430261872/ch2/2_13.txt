@@ -1,0 +1,13 @@
+create bitmap index f_shipments_bm_idx1
+on f_shipments(d_customers.cust_name)
+from f_shipments, d_customers
+where f_shipments.d_cust_id = d_customers.d_cust_id;
+
+select d.cust_name
+from f_shipments f, d_customers d
+where f.d_cust_id = d.d_cust_id
+and d.cust_name = 'Oracle';
+
+
+
+

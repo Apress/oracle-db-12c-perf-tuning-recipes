@@ -1,0 +1,11 @@
+alter session set optimizer_capture_sql_plan_baselines=true;
+
+select first_name from emp where emp_id=3000;
+select first_name from emp where emp_id=3000;
+
+alter session set optimizer_capture_sql_plan_baselines=false;
+
+SELECT
+ sql_handle, plan_name, enabled, accepted,
+ created, optimizer_cost, sql_text
+FROM dba_sql_plan_baselines;

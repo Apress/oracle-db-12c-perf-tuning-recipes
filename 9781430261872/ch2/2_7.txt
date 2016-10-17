@@ -1,0 +1,16 @@
+create table cust(
+ cust_id number
+,last_name varchar2(30)
+,first_name varchar2(30)
+,middle_name varchar2(30));
+
+create index cust_cidx1 on cust(last_name, first_name) compress 2;
+create index cust_cidx1 on cust(last_name, first_name) compress 1;
+
+select sum(bytes) from user_extents where segment_name='&ind_name';
+select index_name, leaf_blocks from user_indexes where index_name='&ind_name';
+
+select  index_name, compression, prefix_length
+from user_indexes
+where index_name = 'CUST_CIDX1';
+

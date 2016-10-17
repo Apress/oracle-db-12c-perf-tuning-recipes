@@ -1,0 +1,17 @@
+SELECT sql_handle, plan_name, enabled, accepted, optimizer_cost
+FROM dba_sql_plan_baselines
+WHERE sql_text like '%select first_name from emp where emp_id=3000%';
+
+SET SERVEROUT ON SIZE 1000000
+SET LONG 100000
+DECLARE
+  rpt CLOB;
+BEGIN
+  rpt := DBMS_SPM.EVOLVE_SQL_PLAN_BASELINE(
+    sql_handle => 'SQL_58c7b2f2891bf765');
+  DBMS_OUTPUT.PUT_LINE(rpt);
+END;
+/
+
+set autotrace trace explain;
+select first_name from emp where emp_id=3000;

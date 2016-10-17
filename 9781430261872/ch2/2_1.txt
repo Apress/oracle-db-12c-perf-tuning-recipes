@@ -1,0 +1,22 @@
+create table cust(
+ cust_id number
+,last_name varchar2(30)
+,first_name varchar2(30));
+
+create index cust_idx1 on cust(last_name);
+
+insert into cust values(7, 'ACER','SCOTT');
+insert into cust values(5, 'STARK','JIM');
+insert into cust values(3, 'GREY','BOB');
+insert into cust values(11,'KHAN','BRAD');
+.....
+insert into cust values(274, 'ACER','SID');
+
+set serveroutput on
+exec dbms_stats.gather_table_stats(user,'CUST');
+variable used_bytes number
+variable alloc_bytes number
+exec dbms_space.create_index_cost( 'create index cust_idx2 on cust(first_name)', -
+               :used_bytes, :alloc_bytes );
+print :used_bytes
+

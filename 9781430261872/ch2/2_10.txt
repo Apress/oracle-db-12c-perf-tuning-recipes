@@ -1,0 +1,10 @@
+create index cust_idx1 on cust(cust_id) reverse;
+
+select index_name, index_type from user_indexes;
+
+alter index cust_idx1 rebuild reverse;
+
+alter index cust_idx1 rebuild noreverse;
+
+
+

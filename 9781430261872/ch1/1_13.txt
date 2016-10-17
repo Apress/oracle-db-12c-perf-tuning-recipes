@@ -1,0 +1,19 @@
+analyze table emp compute statistics;
+
+select owner, chain_cnt
+,round(chain_cnt/num_rows*100,2) chain_pct
+,avg_row_len, pct_free
+from dba_tables
+where table_name = 'EMP';
+
+with a as (select sum(value) total_rows_read
+from v$sysstat
+where name like '%table%'
+and name != 'table fetch continued row'),
+b as (select value total_mig_chain_rows
+from v$sysstat where name = 'table fetch continued row')
+select a.total_rows_read, b.total_mig_chain_rows,
+b.total_mig_chain_rows/a.total_rows_read pct_rows_mig_or_chained
+from a, b;
+
+select 'analyze table ' || table_name || ' compute statistics;' from user_tables;

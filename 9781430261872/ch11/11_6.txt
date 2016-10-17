@@ -1,0 +1,20 @@
+BEGIN
+  dbms_scheduler.set_attribute(
+  name => 'SUNDAY_WINDOW',
+  attribute => 'DURATION',
+  value => numtodsinterval(2, 'hour'));
+END;
+/
+
+SELECT window_name, next_start_date, duration
+FROM dba_scheduler_windows;
+
+SELECT client_name, status, consumer_group, window_group
+FROM dba_autotask_client
+ORDER BY client_name;
+	
+SELECT window_name, to_char(start_time,'dd-mon-yy hh24:mi'), duration
+FROM dba_autotask_schedule
+ORDER BY start_time;
+
+

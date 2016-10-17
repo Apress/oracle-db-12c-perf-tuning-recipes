@@ -1,0 +1,10 @@
+BEGIN
+  DBMS_SQLTUNE.CREATE_SQLSET(
+  sqlset_name => 'HIGH_IO',
+  description => 'High disk read tuning set');
+END;
+/
+
+select owner, name, id, created, statement_count from dba_sqlset;
+
+

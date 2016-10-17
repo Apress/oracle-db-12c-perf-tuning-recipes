@@ -1,0 +1,18 @@
+SELECT first_name
+FROM cust
+WHERE UPPER(first_name) = 'DAVE';
+
+SELECT first_name
+FROM cust
+WHERE UPPER(first_name) = 'DAVE';
+
+create index cust_vidx1 on cust(up_name);
+
+set long 5000;
+select dbms_metadata.get_ddl('TABLE','CUST') from dual;
+
+SET LONG 5000
+select index_name, column_expression from user_ind_expressions;
+
+
+

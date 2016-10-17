@@ -1,0 +1,23 @@
+SELECT
+'Task Name : ' || f.task_name || chr(10) ||
+'Segment Name : ' || o.attr2 || chr(10) ||
+'Segment Type : ' || o.type || chr(10) ||
+'Partition Name : ' || o.attr3 || chr(10) ||
+'Message : ' || f.message || chr(10) ||
+'More Info : ' || f.more_info TASK_ADVICE
+FROM dba_advisor_findings f
+,dba_advisor_objects o
+WHERE o.task_id = f.task_id
+AND o.object_id = f.object_id
+AND f.task_name like '&task_name'
+ORDER BY f.task_name;
+
+create table temp_emp
+as select *
+from emp
+where rowid in
+(select head_rowid from chained_rows where table_name = 'EMP');
+
+delete from emp
+where rowid in
+(select head_rowid from chained_rows where table_name = 'EMP');

@@ -1,0 +1,2 @@
+insert into emp values(1, 'John', 'Smith');
+select xidusn, xidsqn from v$transaction;

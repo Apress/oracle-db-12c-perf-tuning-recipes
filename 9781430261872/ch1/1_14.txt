@@ -1,0 +1,2 @@
+SELECT NVL(vsize(emp_id),0) + NVL(vsize(first_name),0) + NVL(vsize(last_name),0)
+FROM emp;

@@ -1,0 +1,36 @@
+DECLARE
+  tune_sql  CLOB;
+  tune_task VARCHAR2(30);
+BEGIN
+  tune_sql := 'select count(*) from emp';
+  tune_task := DBMS_SQLTUNE.CREATE_TUNING_TASK(
+    sql_text   => tune_sql
+   ,user_name  => 'MV_MAINT'
+   ,scope      => 'COMPREHENSIVE'
+   ,time_limit => 60
+   ,task_name  => 'TUNE1'
+   ,description => 'Calling SQL Tuning Advisor for one statement'
+);
+END;
+/
+
+exec dbms_sqltune.execute_tuning_task(task_name=>'TUNE1');
+
+set long 10000
+set longchunksize 10000
+set lines 132
+set pages 200
+select dbms_sqltune.report_tuning_task('TUNE1') from dual;
+
+begin
+-- This is the code from the SQL Tuning Advisor
+dbms_sqltune.accept_sql_profile(
+    task_name => 'TUNE1',
+    task_owner => 'SYS',
+    replace => TRUE,
+    profile_type => DBMS_SQLTUNE.PX_PROFILE);
+--
+end;
+/
+
+exec DBMS_SQLTUNE.DROP_TUNING_TASK(task_name=>'TUNE1');

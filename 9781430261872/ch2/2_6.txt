@@ -1,0 +1,19 @@
+select last_name, first_name
+from cust
+where last_name = 'SMITH'
+and first_name = 'STEVE';
+
+create table cust(
+ cust_id number primary key
+,last_name varchar2(30)
+,first_name varchar2(30));
+
+create index cust_idx1 on cust(last_name, first_name);
+
+insert into cust values(1,'SMITH','JOHN');
+insert into cust values(2,'JONES','DAVE');
+insert into cust values(3,'FORD','SUE');
+
+exec dbms_stats.gather_table_stats(ownname=>user,-
+           tabname=>'CUST',cascade=>true);
+

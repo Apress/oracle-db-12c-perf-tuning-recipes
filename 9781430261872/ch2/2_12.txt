@@ -1,0 +1,51 @@
+create bitmap index f_sales_cust_fk1 on f_sales(cust_id);
+
+select index_name, index_type from user_indexes where index_name='F_SALES_CUST_FK1';
+
+create table d1(d1 number);
+create table d2(d2 number);
+create table d3(d3 number);
+create table d4(d4 number);
+create table d5(d5 number);
+create table f_fact(d1 number, d2 number, d3 number, d4 number, d5 number, counter number);
+
+insert into d1 select level from dual connect by level <= 2;
+insert into d2 select level from dual connect by level <= 3;
+insert into d3 select level from dual connect by level <= 5;
+insert into d4 select level from dual connect by level <= 100;
+insert into d5 select level from dual connect by level <= 1000;
+--
+insert into f_fact (d1,d2,d3,d4,d5,counter)
+select d1,d2,d3,d4,d5,dbms_random.value*100
+from d1,d2,d3,d4,d5;
+
+create bitmap index f_fact_b1 on f_fact(d1);
+create bitmap index f_fact_b2 on f_fact(d2);
+create bitmap index f_fact_b3 on f_fact(d3);
+create bitmap index f_fact_b4 on f_fact(d4);
+create bitmap index f_fact_b5 on f_fact(d5);
+
+exec dbms_stats.gather_schema_stats(ownname=>user);
+
+select count(*) from f_fact where d1 = 2 and (d2 = 3 or d3 = 4) and d4 IN (10,11,12);
+
+drop index f_fact_b1;
+drop index f_fact_b2;
+drop index f_fact_b3;
+drop index f_fact_b4;
+drop index f_fact_b5;
+--
+create index f_fact_b1 on f_fact(d1);
+create index f_fact_b2 on f_fact(d2);
+create index f_fact_b3 on f_fact(d3);
+create index f_fact_b4 on f_fact(d4);
+create index f_fact_b5 on f_fact(d5);
+--
+exec dbms_stats.gather_schema_stats(ownname=>user);
+
+select count(*) from f_fact where d1 = 2 and (d2 = 3 or d3 = 4) and d4 IN (10,11,12);
+
+
+
+
+

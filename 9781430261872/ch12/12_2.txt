@@ -1,0 +1,8 @@
+select sql_id, child_number, sql_profile
+from v$sql
+where sql_profile is not null;
+
+select sql_id, sql_profile
+from dba_hist_sqlstat
+where sql_profile is not null;
+

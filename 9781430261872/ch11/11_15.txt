@@ -1,0 +1,33 @@
+BEGIN
+  dbms_sqltune.create_stgtab_sqlset(
+  table_name => 'STS_TABLE'
+ ,schema_name => 'MV_MAINT');
+END;
+/
+
+BEGIN
+  dbms_sqltune.pack_stgtab_sqlset(
+  sqlset_name          => 'PROD_WORKLOAD'
+ ,sqlset_owner         => 'SYS'
+ ,staging_table_name   => 'STS_TABLE'
+ ,staging_schema_owner => 'MV_MAINT');
+END;
+/
+
+SELECT name, owner, created, statement_count
+FROM dba_sqlset;
+
+create database link source_db
+connect to mv_maint
+identified by foo
+using 'source_db';
+
+BEGIN
+DBMS_SQLTUNE.UNPACK_STGTAB_SQLSET(
+  sqlset_name        => '%'
+ ,replace            => TRUE
+ ,staging_table_name => 'STS_TABLE'
+ ,staging_schema_owner=> 'MV_MAINT');
+END;
+/
+

@@ -1,0 +1,25 @@
+select first_name from emp where emp_id = 100;
+
+select sql_id, plan_hash_value, sql_text
+from v$sql
+where sql_text like 'select first_name from emp where emp_id = 100'
+and sql_text not like '%v$sql';
+
+select sql_handle, plan_name, sql_text from dba_sql_plan_baselines;
+
+DECLARE
+  plan1 PLS_INTEGER;
+BEGIN
+  plan1 := DBMS_SPM.LOAD_PLANS_FROM_CURSOR_CACHE(sql_id => 'dv73f7y69ny8z',
+             plan_hash_value => 3956160932);
+END;
+/
+
+DECLARE
+  plan1 PLS_INTEGER;
+BEGIN
+  plan1 := DBMS_SPM.LOAD_PLANS_FROM_CURSOR_CACHE(
+             attribute_name => 'sql_text'
+            ,attribute_value => 'select emp_id from emp%');
+END;
+/

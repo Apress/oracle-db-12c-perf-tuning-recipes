@@ -1,0 +1,10 @@
+SELECT plan_name, sql_text FROM dba_sql_plan_baselines;
+
+SELECT *
+FROM TABLE(
+DBMS_XPLAN.DISPLAY_SQL_PLAN_BASELINE(plan_name=>'SQL_PLAN_5jjxkya4jrxv5d8a279cc'));
+
+SELECT *
+FROM TABLE(
+DBMS_XPLAN.DISPLAY_SQL_PLAN_BASELINE(sql_handle=>'SQL_b98d2ae2145eec3d'));
+

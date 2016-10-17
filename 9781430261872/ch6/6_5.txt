@@ -1,0 +1,4 @@
+ps -e -o pcpu,pid,user,tty,args | sort -n -k 1 -r | head
+ps -e -o pmem,pid,user,tty,args | sort -n -k 1 -r | head
+alias topc='ps -e -o pcpu,pid,user,tty,args | sort -n -k 1 -r | head'
+alias topm='ps -e -o pmem,pid,user,tty,args | sort -n -k 1 -r | head'
